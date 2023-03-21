@@ -1,4 +1,8 @@
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.Base64;
 
 public class Crypt {
 
@@ -43,6 +47,22 @@ public class Crypt {
         return dec;
     }
 
+    public static String password_hash(String word) throws NoSuchAlgorithmException {
+        byte[] inputBytes = word.getBytes();
+        MessageDigest md = MessageDigest.getInstance("SHA-512");
+        byte[] outputBytes = md.digest(inputBytes);
+        return Base64.getEncoder().encodeToString(outputBytes);
+    }
 
+    public static String salt(){
+        // Create an array of 32 bytes (256 bits) to store random bytes
+        byte[] saltBytes = new byte[32];
+        // The SecureRandom class provides CSPRNG functionality
+        SecureRandom random = new SecureRandom();
+        // Fill the byte array with random bytes
+        random.nextBytes(saltBytes);
+        // Encode the random bytes as a Base64 string
+        return Base64.getEncoder().encodeToString(saltBytes);
+    }
 
 }
